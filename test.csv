@@ -1,0 +1,9 @@
+Type,Button,Coordinates,WaitTime
+Press,'t',,0.1
+Press,'e',,0.1
+Release,'t',,0.0
+Release,'e',,0.0
+Press,'s',,0.1
+Press,'t',,0.1
+Release,'s',,0.0
+Release,'t',,0.0

@@ -1,0 +1,25 @@
+Type,Button,Coordinates,WaitTime
+Press,Button.left,"(334, 1063)",0.2
+Release,Button.left,"(334, 1063)",0.0
+Press,'t',,0.1
+Press,'e',,0.1
+Release,'t',,0.0
+Release,'e',,0.0
+Press,'s',,0.1
+Press,'t',,0.1
+Release,'s',,0.0
+Release,'t',,0.0
+Press,Key.space,,0.1
+Release,Key.space,,0.0
+Press,'1',,0.1
+Release,'1',,0.0
+Press,Key.space,,0.1
+Release,Key.space,,0.0
+Press,'2',,0.1
+Release,'2',,0.0
+Press,Key.space,,0.1
+Release,Key.space,,0.0
+Press,'3',,0.1
+Release,'3',,0.0
+Press,Key.enter,,0.1
+Release,Key.enter,,0.0
