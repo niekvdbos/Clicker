@@ -1,6 +1,9 @@
 import sys
 from time import sleep
 
+import ctypes
+PROCESS_PER_MONITOR_DPI_AWARE = 2
+ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)
 import pandas as pd
 
 from pynput import mouse, keyboard
@@ -165,6 +168,13 @@ class App(QWidget):
         files, _ = QFileDialog.getOpenFileNames(self,"QFileDialog.getOpenFileNames()", "","All Files (*);;CSV Files (*.csv)", options=options)
         if len(files) == 1 and files[0].endswith('.csv'):
             self.keyEvents = pd.read_csv(files[0])
+            Button = mouse.Button
+            Key = keyboard.Key
+            for i, row in self.keyEvents.iterrows():
+                if type(row.Coordinates) is str:
+                    row.Coordinates = tuple(eval(row.Coordinates))
+                row.Button = eval(row.Button)
+                self.keyEvents.iloc[i] = row
             self.update_table()
 
 
