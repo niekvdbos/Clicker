@@ -33,6 +33,8 @@ class App(QWidget):
         self.mouseWait = 300
         self.keyWait = 200
 
+        self.interrupt_flag = False
+
         self.mListener = mouse.Listener(on_click=self.on_click)
         self.kListener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
 
@@ -54,7 +56,7 @@ class App(QWidget):
         grid.addWidget(self.stopButton, 1, 0)
         self.stopButton.clicked.connect(self.stop_record)
 
-        self.playButton = QPushButton('Run')
+        self.playButton = QPushButton('Run (Press F4 to interrput)')
         grid.addWidget(self.playButton, 2, 0)
         self.playButton.clicked.connect(self.play)
 
@@ -230,23 +232,27 @@ class App(QWidget):
         kController = keyboard.Controller()
         mController = mouse.Controller()
 
-        for run in range(self.runTimes): 
-            rows = self.keyEvents[self.skipFirst:]
-            if run == 0:
-                rows = self.keyEvents
-            for i, row in rows.iterrows():
-                sleep(row.WaitTime)
-                if type(row.Coordinates) is tuple:
-                    mController.position = row.Coordinates
-                    if row.Type == 'Press':
-                        mController.press(row.Button)
-                    elif row.Type == 'Release':
-                        mController.release(row.Button)
-                else:
-                    if row.Type == 'Press':
-                        kController.press(row.Button)
-                    elif row.Type == 'Release':
-                        kController.release(row.Button)
+        with keyboard.Listener(on_press=self.on_listen) as listener:
+            for run in range(self.runTimes): 
+                rows = self.keyEvents[self.skipFirst:]
+                if run == 0:
+                    rows = self.keyEvents
+                for i, row in rows.iterrows():
+                    if self.interrupt_flag == True:
+                        self.interrupt_flag = False
+                        return
+                    sleep(row.WaitTime)
+                    if type(row.Coordinates) is tuple:
+                        mController.position = row.Coordinates
+                        if row.Type == 'Press':
+                            mController.press(row.Button)
+                        elif row.Type == 'Release':
+                            mController.release(row.Button)
+                    else:
+                        if row.Type == 'Press':
+                            kController.press(row.Button)
+                        elif row.Type == 'Release':
+                            kController.release(row.Button)
 
 
     def empty_events(self):
@@ -286,6 +292,9 @@ class App(QWidget):
                  'WaitTime': 0
                  }, ignore_index=True)
 
+    def on_listen(self, key):
+        if key == keyboard.Key.f4:
+            self.interrupt_flag = True
 
     def update_table(self):
         self.skipBox.setMaximum(max(0, len(self.keyEvents)-1))
